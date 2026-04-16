@@ -105,7 +105,7 @@ func (s *UserService) ChangePass(id string, oldPass string, newUser string, newP
 func (s *UserService) LoadTokens() ([]byte, error) {
 	db := database.GetDB()
 	var tokens []model.Tokens
-	err := db.Model(model.Tokens{}).Preload("User").Where("expiry == 0 or expiry > ?", time.Now().Unix()).Find(&tokens).Error
+	err := db.Model(model.Tokens{}).Preload("User").Where("expiry = 0 or expiry > ?", time.Now().Unix()).Find(&tokens).Error
 	if err != nil {
 		return nil, err
 	}

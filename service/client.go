@@ -378,9 +378,6 @@ func (s *ClientService) DepleteClients() ([]uint, error) {
 	defer func() {
 		if err == nil {
 			tx.Commit()
-			if err1 := db.Exec("PRAGMA wal_checkpoint(FULL)").Error; err1 != nil {
-				logger.Error("Error checkpointing WAL: ", err1.Error())
-			}
 		} else {
 			tx.Rollback()
 		}

@@ -64,7 +64,7 @@ func migrateClientSchema(db *gorm.DB) error {
 }
 
 func deleteOldWebSecret(db *gorm.DB) error {
-	return db.Exec("DELETE FROM settings WHERE key = ?", "webSecret").Error
+	return db.Model(&model.Setting{}).Where("`key` = ?", "webSecret").Delete(nil).Error
 }
 
 func changesObj(db *gorm.DB) error {

@@ -13,7 +13,7 @@ import (
 
 func migrate_dns(db *gorm.DB) error {
 	var configStr string
-	err := db.Model(model.Setting{}).Select("value").Where("key = ?", "config").First(&configStr).Error
+	err := db.Model(model.Setting{}).Select("value").Where("`key` = ?", "config").First(&configStr).Error
 	if err != nil {
 		return err
 	}
@@ -92,7 +92,7 @@ func migrate_dns(db *gorm.DB) error {
 		return err
 	}
 
-	return db.Model(model.Setting{}).Where("key = ?", "config").Update("value", string(configs)).Error
+	return db.Model(model.Setting{}).Where("`key` = ?", "config").Update("value", string(configs)).Error
 }
 
 func remove_outbound_strategy(db *gorm.DB) error {

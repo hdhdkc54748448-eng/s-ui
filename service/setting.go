@@ -111,7 +111,7 @@ func (s *SettingService) ResetSettings() error {
 func (s *SettingService) getSetting(key string) (*model.Setting, error) {
 	db := database.GetDB()
 	setting := &model.Setting{}
-	err := db.Model(model.Setting{}).Where("key = ?", key).First(setting).Error
+	err := db.Model(model.Setting{}).Where("`key` = ?", key).First(setting).Error
 	if err != nil {
 		return nil, err
 	}
@@ -359,7 +359,7 @@ func (s *SettingService) SaveConfig(tx *gorm.DB, config json.RawMessage) error {
 	if err != nil {
 		return err
 	}
-	return tx.Model(model.Setting{}).Where("key = ?", "config").Update("value", string(configs)).Error
+	return tx.Model(model.Setting{}).Where("`key` = ?", "config").Update("value", string(configs)).Error
 }
 
 func (s *SettingService) Save(tx *gorm.DB, data json.RawMessage) error {
@@ -399,7 +399,7 @@ func (s *SettingService) Save(tx *gorm.DB, data json.RawMessage) error {
 				return err
 			}
 		}
-		err = tx.Model(model.Setting{}).Where("key = ?", key).Update("value", obj).Error
+		err = tx.Model(model.Setting{}).Where("`key` = ?", key).Update("value", obj).Error
 		if err != nil {
 			return err
 		}

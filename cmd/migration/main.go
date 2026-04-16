@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/alireza0/s-ui/config"
 	"github.com/alireza0/s-ui/database"
+	"github.com/alireza0/s-ui/database/model"
 	"log"
 )
 
@@ -22,7 +23,14 @@ func MigrateDb() {
 	}()
 	currentVersion := config.GetVersion()
 	dbVersion := ""
-	tx.Raw("SELECT value FROM settings WHERE key = ?", "version").Find(&dbVersion)
+	err = tx.Model(&model.Setting{}).
+		Select("value").
+		Where("`key` = ?", "version").
+		Scan(&dbVersion).Error
+
+	if err != nil {
+		log.Printf("Failed to get DB version: %v", err)
+	}
 	fmt.Println("Current version:", currentVersion, "\nDatabase version:", dbVersion)
 
 	if currentVersion == dbVersion {
@@ -57,7 +65,9 @@ func MigrateDb() {
 	}
 
 	// Set version
-	err = tx.Exec("UPDATE settings SET value = ? WHERE key = ?", currentVersion, "version").Error
+	err = tx.Model(&model.Setting{}).
+		Where("`key` = ?", "version").
+		Update("value", currentVersion).Error
 	if err != nil {
 		log.Fatal("Update version failed: ", err)
 		return
