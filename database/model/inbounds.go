@@ -6,16 +6,16 @@ import (
 
 type Inbound struct {
 	Id   uint   `json:"id" form:"id" gorm:"primaryKey;autoIncrement"`
-	Type string `json:"type" form:"type"`
-	Tag  string `json:"tag" form:"tag" gorm:"unique"`
+	Type string `json:"type" form:"type" gorm:"type:varchar(64);not null;"`
+	Tag  string `json:"tag" form:"tag" gorm:"unique;type:varchar(64);not null;"`
 
 	// Foreign key to tls table
 	TlsId uint `json:"tls_id" form:"tls_id"`
 	Tls   *Tls `json:"tls" form:"tls" gorm:"foreignKey:TlsId;references:Id"`
 
-	Addrs   json.RawMessage `json:"addrs" form:"addrs"`
-	OutJson json.RawMessage `json:"out_json" form:"out_json"`
-	Options json.RawMessage `json:"-" form:"-"`
+	Addrs   json.RawMessage `json:"addrs" form:"addrs" gorm:"type:JSON;"`
+	OutJson json.RawMessage `json:"out_json" form:"out_json" gorm:"type:JSON;"`
+	Options json.RawMessage `json:"-" form:"-" gorm:"type:JSON;"`
 }
 
 func (i *Inbound) UnmarshalJSON(data []byte) error {

@@ -6,14 +6,14 @@ import (
 
 type Service struct {
 	Id   uint   `json:"id" form:"id" gorm:"primaryKey;autoIncrement"`
-	Type string `json:"type" form:"type"`
-	Tag  string `json:"tag" form:"tag" gorm:"unique"`
+	Type string `json:"type" form:"type" gorm:"type:varchar(64);not null;"`
+	Tag  string `json:"tag" form:"tag" gorm:"unique;type:varchar(64);not null;"`
 
 	// Foreign key to tls table
 	TlsId uint `json:"tls_id" form:"tls_id"`
 	Tls   *Tls `json:"tls" form:"tls" gorm:"foreignKey:TlsId;references:Id"`
 
-	Options json.RawMessage `json:"-" form:"-"`
+	Options json.RawMessage `json:"-" form:"-" gorm:"type:JSON;"`
 }
 
 func (i *Service) UnmarshalJSON(data []byte) error {

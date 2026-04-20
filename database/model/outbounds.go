@@ -4,9 +4,9 @@ import "encoding/json"
 
 type Outbound struct {
 	Id      uint            `json:"id" form:"id" gorm:"primaryKey;autoIncrement"`
-	Type    string          `json:"type" form:"type"`
-	Tag     string          `json:"tag" form:"tag" gorm:"unique"`
-	Options json.RawMessage `json:"-" form:"-"`
+	Type    string          `json:"type" form:"type" gorm:"type:varchar(64);not null;"`
+	Tag     string          `json:"tag" form:"tag" gorm:"unique;type:varchar(64);not null;"`
+	Options json.RawMessage `json:"-" form:"-" gorm:"type:JSON;"`
 }
 
 func (o *Outbound) UnmarshalJSON(data []byte) error {

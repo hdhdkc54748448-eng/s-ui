@@ -6,10 +6,10 @@ import (
 
 type Endpoint struct {
 	Id      uint            `json:"id" form:"id" gorm:"primaryKey;autoIncrement"`
-	Type    string          `json:"type" form:"type"`
-	Tag     string          `json:"tag" form:"tag" gorm:"unique"`
-	Options json.RawMessage `json:"-" form:"-"`
-	Ext     json.RawMessage `json:"ext" form:"ext"`
+	Type    string          `json:"type" form:"type" gorm:"type:varchar(64);not null;"`
+	Tag     string          `json:"tag" form:"tag" gorm:"unique;type:varchar(64);not null;"`
+	Options json.RawMessage `json:"-" form:"-" gorm:"type:JSON;"`
+	Ext     json.RawMessage `json:"ext" form:"ext" gorm:"type:JSON;"`
 }
 
 func (o *Endpoint) UnmarshalJSON(data []byte) error {
