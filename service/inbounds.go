@@ -78,7 +78,7 @@ func (s *InboundService) GetAll() (*[]map[string]interface{}, error) {
 			!(inbound.Type == "shadowtls" && shadowtls_version < 3) &&
 			!(inbound.Type == "shadowsocks" && ss_managed) {
 			users := []string{}
-			err = db.Raw("SELECT name FROM clients WHERE ? MEMBER OF(inbounds)", inbound.Id).Scan(&users).Error
+			err = db.Raw("SELECT name FROM clients WHERE JSON_CONTAINS(inbounds, JSON_ARRAY(?))", inbound.Id).Scan(&users).Error
 			if err != nil {
 				return nil, err
 			}
@@ -266,11 +266,18 @@ func (s *InboundService) fetchUsers(db *gorm.DB, inboundType string, condition s
 
 	var users []string
 
-	sql := fmt.Sprintf("SELECT clients.config->>'%s' FROM clients WHERE enable = true AND %s", fmt.Sprintf("$.%s", inboundType), condition)
-	err := db.Raw(sql).Scan(&users).Error
-
+	sql := fmt.Sprintf("SELECT clients.config->>'$.%s' FROM clients WHERE enable = true AND %s", inboundType, condition)
+	rows, err := db.Raw(sql).Rows()
 	if err != nil {
 		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var user string
+		if err := rows.Scan(&user); err != nil {
+			return nil, err
+		}
+		users = append(users, user)
 	}
 	var usersJson []json.RawMessage
 	for _, user := range users {
@@ -279,6 +286,7 @@ func (s *InboundService) fetchUsers(db *gorm.DB, inboundType string, condition s
 		}
 		usersJson = append(usersJson, json.RawMessage(user))
 	}
+
 	return usersJson, nil
 }
 
@@ -293,7 +301,7 @@ func (s *InboundService) addUsers(db *gorm.DB, inboundJson []byte, inboundId uin
 		return nil, err
 	}
 
-	condition := fmt.Sprintf("%d MEMBER OF(inbounds)", inboundId)
+	condition := fmt.Sprintf("JSON_CONTAINS(inbounds, JSON_ARRAY(%d))", inboundId)
 	inbound["users"], err = s.fetchUsers(db, inboundType, condition, inbound)
 	if err != nil {
 		return nil, err

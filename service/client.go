@@ -273,7 +273,7 @@ func (s *ClientService) UpdateClientsOnInboundAdd(tx *gorm.DB, initIds string, i
 
 func (s *ClientService) UpdateClientsOnInboundDelete(tx *gorm.DB, id uint, tag string) error {
 	var clientIds []uint
-	err := tx.Raw("SELECT id FROM clients WHERE ? MEMBER OF(inbounds)", id).Scan(&clientIds).Error
+	err := tx.Raw("SELECT id FROM clients WHERE JSON_CONTAINS(inbounds, JSON_ARRAY(?))", id).Scan(&clientIds).Error
 	if err != nil {
 		return err
 	}
@@ -322,7 +322,7 @@ func (s *ClientService) UpdateLinksByInboundChange(tx *gorm.DB, inbounds *[]mode
 	var err error
 	for _, inbound := range *inbounds {
 		var clientIds []uint
-		err = tx.Raw("SELECT id FROM clients WHERE ? MEMBER OF(inbounds)", inbound.Id).Scan(&clientIds).Error
+		err = tx.Raw("SELECT id FROM clients WHERE JSON_CONTAINS(inbounds, JSON_ARRAY(?))", inbound.Id).Scan(&clientIds).Error
 		if err != nil {
 			return err
 		}
