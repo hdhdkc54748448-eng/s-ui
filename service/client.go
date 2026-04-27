@@ -27,11 +27,12 @@ func (s *ClientService) Get(id string) (*[]model.Client, error) {
 func (s *ClientService) getById(id string) (*[]model.Client, error) {
 	db := database.GetDB()
 	var client []model.Client
-	err := db.Model(model.Client{}).Where("id in ?", strings.Split(id, ",")).Scan(&client).Error
+	err := db.Model(model.Client{}).
+		Select("`id`, `enable`, `name`, `desc`, `group`, `inbounds`, `up`, `down`, `volume`, `expiry`").
+		Where("id in ?", strings.Split(id, ",")).Scan(&client).Error
 	if err != nil {
 		return nil, err
 	}
-
 	return &client, nil
 }
 
