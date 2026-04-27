@@ -18,9 +18,6 @@ import (
 type ClientService struct{}
 
 func (s *ClientService) Get(id string) (*[]model.Client, error) {
-	if id == "" {
-		return s.GetAll()
-	}
 	return s.getById(id)
 }
 
@@ -59,6 +56,7 @@ func (s *ClientService) Save(tx *gorm.DB, act string, data json.RawMessage, host
 		if err != nil {
 			return nil, err
 		}
+
 		err = s.updateLinksWithFixedInbounds(tx, []*model.Client{&client}, hostname)
 		if err != nil {
 			return nil, err
