@@ -186,6 +186,9 @@ func (s *ClientService) Save(tx *gorm.DB, act string, data json.RawMessage, host
 		var client model.Client
 		err = tx.Where("id = ?", id).First(&client).Error
 		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return nil, nil
+			}
 			return nil, err
 		}
 		err = json.Unmarshal(client.Inbounds, &inboundIds)
@@ -202,9 +205,13 @@ func (s *ClientService) Save(tx *gorm.DB, act string, data json.RawMessage, host
 		if err != nil {
 			return nil, err
 		}
+
 		var client model.Client
 		err = tx.Where("name = ?", name).First(&client).Error
 		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return nil, nil
+			}
 			return nil, err
 		}
 		err = json.Unmarshal(client.Inbounds, &inboundIds)
