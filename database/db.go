@@ -46,9 +46,6 @@ func OpenDB() error {
 	}
 
 	dsn := os.Getenv("DATABASE_URL")
-	if dsn == "" {
-		dsn = "root:d5cb5d0ff775@tcp(172.17.0.1:3306)/sm?charset=utf8mb4&parseTime=True&loc=Local"
-	}
 	var err error
 	db, err = gorm.Open(mysql.Open(dsn), c)
 	if err != nil {
