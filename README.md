@@ -1,7 +1,7 @@
-重大注意：
+##重大注意：
 本脚本提取版本仅适用于x86_64的服务器操作系统
 
-八大叮嘱：
+##八大叮嘱：
 
 一、这是我本人从原作者那里复刻下来的代码和项目，我从我服务器里提取出来一个适合debin12的x86_64版本，原作者的项目简介我留下供大家参照releases里有详细的介绍，可能会冒犯到你，但是这是为了提醒，请谅解。
 
@@ -20,9 +20,9 @@ IP-Sentinel：https://github.com/hotyue/IP-Sentinel
 
 八、一定要买有IP双栈的服务器可以保你一时不会封禁，躲过送中或者IP黑名单后的重点观察期。
 
-配置方法如下：
+##面板配置方法如下：
 
-## **1.先把文件考进服务器里然后放在服务器的用户文件夹下**：
+## **1.先把文件下载并且考进服务器里然后放在服务器的用户文件夹下（从releases那里下载对应的s-ui面板版本和系统架构的文件，记住操作文档是.md格式的文件必须跟着一起下载），然后创建文件夹s-ui,建议创建在用户文件夹下**：
 
 解压文件：sudo tar -zxvf s-ui-full.tar.gz -C /root/s-ui/
 
@@ -70,7 +70,7 @@ sudo chmod -R 755 /usr/local/s-ui/s-ui
 
 bash /usr/local/s-ui/s-ui.sh
 
-原作者项目介绍：
+##原作者项目介绍：
 # S-UI
 **An Advanced Web Panel • Built on SagerNet/Sing-Box**
 ![](https://img.shields.io/github/v/release/alireza0/s-ui.svg)
