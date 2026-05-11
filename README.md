@@ -1,6 +1,58 @@
 # S-UI
 **An Advanced Web Panel • Built on SagerNet/Sing-Box**
-这是我本人从原作者那里复刻下来的代码和项目，我从我服务器里提取出来一个适合debin12的x86_64版本，原作者的项目简介我留下供大家参照relese里有详细的介绍，可能会冒犯到你，但是这是为了提醒，请谅解。
+这是我本人从原作者那里复刻下来的代码和项目，我从我服务器里提取出来一个适合debin12的x86_64版本，原作者的项目简介我留下供大家参照relese里有详细的介绍，可能会冒犯到你，但是这是为了提醒，请谅解。配置方法如下：
+## **1.先把文件考进服务器里然后放在服务器的用户文件夹下**：
+
+解压文件：sudo tar -zxvf s-ui-full.tar.gz -C /root/s-ui/
+
+## **2.先把文件复制到系统目录**：sudo cp -r ~/s-ui /usr/local/
+
+## **3.给主程序和脚本加上执行权限：**
+
+sudo chmod +x sui
+sudo chmod +x s-ui.sh
+
+## **4.注册服务并启动：**
+
+sudo cp s-ui.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now s-ui
+
+## **5.检查运行状态：**
+
+systemctl status s-ui
+
+## **6.检查端口状态是否有监听：**
+
+sudo lsof -i :2095
+
+# **7.如果有冒红字请运行：**
+
+uname -m查看系统架构
+file /usr/local/s-ui/sui检查是否有可执行文件
+
+##### 给整个s-ui目录授权，让root能读写
+
+sudo chown -R root:root /usr/local/s-ui/s-ui
+sudo chmod -R 755 /usr/local/s-ui/s-ui
+
+### 给数据库目录单独加上读写权限，让root用户直接读取
+
+## sudo chmod -R 777 /usr/local/s-ui/db
+
+
+
+本脚本提取版本仅适用于x86_64的服务器操作系统
+
+### 最重要的一步，修复数据库冲突：
+
+\# 停掉服务 sudo systemctl stop s-ui # 备份旧数据库（可选） sudo mv /usr/local/s-ui/db /usr/local/s-ui/db.old # 重启服务，程序会自动创建全新的数据库 sudo systemctl restart s-ui
+
+### 启动面板
+
+bash /usr/local/s-ui/s-ui.sh
+
+原作者项目介绍：
 ![](https://img.shields.io/github/v/release/alireza0/s-ui.svg)
 ![S-UI Docker pull](https://img.shields.io/docker/pulls/alireza7/s-ui.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/alireza0/s-ui)](https://goreportcard.com/report/github.com/alireza0/s-ui)
